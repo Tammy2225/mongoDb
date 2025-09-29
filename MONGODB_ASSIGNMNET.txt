@@ -1,0 +1,169 @@
+db.student.find()
+db.student.find().pretty()
+db.student.insertMany([
+{
+  "name": "user1",
+  "city" : "karnal",
+  "dept" : "hr",
+  "age"   : 42,
+},
+{
+  "name": "user2",
+  "city" : "gaziabad",
+  "dept" : "sales",
+  "age"   : 42,
+},
+]}
+assignnment answers:
+2 : db.food_item.find({ category: "Juice" }).pretty()
+3 : db.restaurant.find({ city: { $in: ["Delhi", "Mumbai"] } }).pretty()
+4 : db.food_item.updateOne(
+  { category: "Snack" },   
+  { $set: { price: 75 } } 
+)
+5 : db.restaurant.updateMany(
+  { city: "Delhi" },
+  { $set: { location: "Indore" } }
+)
+6 : db.food_item.deleteMany({
+  $or: [
+    { brand: "Haldiram" },
+    { category: "Juice" }
+  ]
+})
+
+
+Assignment 2-
+1 : db.products.find({
+  price: { $gte: 1000 }
+})
+
+2 : db.products.aggregate([
+  {
+    $group: {
+      _id: "$category",   
+      totalProducts: { $sum: 1 }
+    }
+  }
+])
+
+3: db.products.aggregate([
+  {
+    $group: {
+      _id: "$category",       
+      maxPrice: { $max: "$price" },
+      minPrice: { $min: "$price" } 
+    }
+  }
+])
+
+4 : db.products.aggregate([
+  {
+    $project: {
+      _id: 0,
+      name: 1,
+      price: 1
+    }
+  },
+  {
+    $sort: { price: -1 }
+  },
+  {
+    $limit: 3
+  }
+])
+
+5 : db.products.aggregate([
+  {
+    $group: {
+      _id: "$supplier.country",   
+      avgPrice: { $avg: "$price" }
+    }
+  }
+])
+
+6 :  db.products.countDocuments({
+       stock: { $lte: 10 }
+      })
+
+7 : db.products.aggregate([
+  {
+    $project: {
+      category: 1,
+      stockValue: { $multiply: ["$price", "$stock"] } 
+    }
+  },
+  {
+    $group: {
+      _id: "$category",                   
+      totalStockValue: { $sum: "$stockValue" }  
+    }
+  }
+])
+
+
+8 : db.products.aggregate([
+  { $sort: { createdAt: -1 } },
+  { $limit: 5 }
+])
+
+9 : db.products.aggregate([
+  {
+    $group: {
+      _id: "$category",      
+      productCount: { $sum: 1 }  
+   }
+  },
+  {
+    $match: {
+      productCount: { $gt: 5 }  
+    }
+  }
+])
+
+10 : db.products.aggregate([
+  {
+    $project: {
+      category: 1,
+      revenue: { $multiply: ["$price", "$stock"] }
+    }
+  },
+  {
+    $group: {
+      _id: "$category",
+      totalRevenue: { $sum: "$revenue" }
+    }
+  },
+  {
+    $sort: { totalRevenue: -1 }
+  },
+  {
+    $limit: 2
+  }
+])
+
+11 : db.products.aggregate([
+  {
+    $addFields: {
+      avgRating: { $avg: "$ratings" }  
+  }
+  },
+  {
+    $sort: { category: 1, avgRating: -1 }
+ },
+  {
+    $group: {
+      _id: "$category",
+      topProductId: { $first: "$_id" },
+      topProductName: { $first: "$name" },
+      topAvgRating: { $first: "$avgRating" }
+    }
+  }
+])
+
+
+
+
+
+
+
